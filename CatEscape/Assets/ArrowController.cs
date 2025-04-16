@@ -1,49 +1,57 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class ArrowController : MonoBehaviour
 {
+    // 그냥 변수이름 변수이름이라 소문자로 쓴거임 
     GameObject player;
     void Start()
     {
-        // 이름과 똑같은 오브젝트를 찾아서 player 변수에 넣는다
-        player = GameObject.Find("player_0");
+        // 유니티에 있는 Hierarchy에 있는 명이랑 똑같아야함
+        player = GameObject.Find("player");
+
     }
 
+    // Update is called once per frame
     void Update()
     {
-        // 1. Arrow 떨어트리기
-        // 프레임마다 등속으로 낙하시킨다
-        transform.Translate(0,-0.01f,0);
+        // 가로안에는 float타입만 받기 때문에 f를 표시해야 좋음
+        // 정수를 입력하면 더블로 알아먹음
 
-        // 화면 밖으로 나오면 "Arrow" 소멸시킨다
-        if(transform.position.y < -5.0f){
+        // 밑으로 내려감
+        transform.Translate(0.0f, -0.1f, 0.0f);
 
-            // Destroy : 메서드 
-            // gameObject : 자신을 가리키는 -> arrow
-            Destroy(gameObject); 
+        if( transform.position.y < -5.0f){
+            // GameObject 는 타입임
+            // gameObject는 arrow 변수임
+            Destroy(gameObject);
         }
 
-        // 2. 충돌 판정
-        Vector2 arrow_position = transform.position;
-        Vector2 player_position = player.transform.position;
+        //충돌 확인
 
-        Vector2 dir = arrow_position - player_position;
+        // 포지션 xyz값 가져옴
+        // p1 : arrow 값
+        // p2 : player 값
+        Vector2 p1 = transform.position;  // 화살의 중심 좌표
+        Vector2 p2 = player.transform.position; // 플레이어 중심 좌표
+        Vector2 dir = p1-p2; 
 
-        // arrow와 player 중심점 거리값 
         float d = dir.magnitude;
+        float r1 = 0.5f;  // 화살의 반지름 
+        float r2 = 1.0f;  // 플레이어의 반지름
 
-        // arrow의 원의 반지름
-        float arrow_r1 = 0.5f;
-        // player의 원의 반지름
-        float player_r2 = 1.0f;
+        if(d < r1+r2){
 
-        if(d < arrow_r1+player_r2){
-            // 감독 스크립트에 플레이어와 화살이 충돌전달
+            // 감독 스크립트에 플레이어와 화살이 충돌했다고 전달함
+
             GameObject director = GameObject.Find("GameDirector");
             director.GetComponent<GameDirector>().DecreaseHP();
             
-            //충돌할 경우 Arrow를 지운다
+            // 두개가 충돌했을때 삭제 
             Destroy(gameObject);
-        }   
+            Debug.Log("화살표가 충돌했슴다!!!!");
+        }
+
     }
 }
