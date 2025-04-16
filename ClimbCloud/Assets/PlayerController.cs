@@ -44,6 +44,7 @@ public class PlayerController : MonoBehaviour
         if(Input.GetKey(KeyCode.RightArrow)) key = 1;
         if(Input.GetKey(KeyCode.LeftArrow)) key = -1;
 
+
         float speedx = Mathf.Abs(rigid2D.linearVelocity.x);
 
         if (speedx < maxWalkSpeed){
